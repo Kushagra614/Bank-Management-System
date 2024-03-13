@@ -14,6 +14,7 @@ class Account{
       long double balance;
 
    public:
+   Account(){}
       Account(string firstName, string lastName, long accountNo, long double balance)
       {
          this->firstName = firstName;
@@ -64,8 +65,7 @@ class Account{
       void display_account() ;
       void deposit(long amount);
       void withdraw(long amount);
-      void listAllaccounts();
-      void delete_account();
+      
 
 };
 
@@ -101,6 +101,92 @@ void Account :: withdraw(long amount)
 {
    balance-=amount;
 }
+
+//FUNCTION DECLERATION
+
+void writeAccount();
+void depositAmmount();
+void listAllaccounts();
+void deleteAccount();
+
+
+int main()
+{
+   char ch;
+   int num;
+   do
+   {
+      cout<<"MAIN MENU"<<endl;
+      cout<<"1.CREATE ACCOUNT"<<endl;
+      cout<<"2. DEPOSIT AMOUNT"<<endl;
+      cout<<"3. WITHDRAW AMOUNT"<<endl;
+      cout<<"4. DISPLAY BALANCE"<<endl;
+      cout<<"5. DISPLAY ALL ACCOUNTS"<<endl;
+      cout<<"6. DELETE AN ACCOUNT"<<endl;
+      cout<<"7. EXIT"<<endl;
+      
+      cin>>ch;
+      switch(ch)
+      {
+         case '1':
+         write_account();
+         break;
+         case '2':
+         depositAmount();
+         break;
+         case '3':
+         withdrawAmount();
+         break;
+         case '4':
+         displayBalance();
+         break;
+         case '5':
+         listAllaccounts();
+         break;
+         case '6':
+         deleteAccount();
+         break;
+         case '7':
+         cout<<"THANK YOU FOR USING THE BANK MANAGEMENT SYSTEM"<<endl;
+         break;
+      }
+         
+   }
+   while(ch!='8');
+   return 0;
+   
+}
+void write_account()
+{
+   Account ac;
+   ofstream outfile("account.data");
+   ac.create_account();
+   outfile<< ac.getaccountNo()<<endl;
+   outfile<< ac.getfirstName()<<endl;
+   outfile<< ac.getlastName()<<endl;
+   
+
+}
+
+void depositAmount()
+{
+   int amt;
+   Account ac;
+   ifstream infile("account.data");
+
+}
+
+void withdrawAmount()
+{
+
+}
+
+void displayBalance()
+{
+   
+}
+
+
 
 
 
