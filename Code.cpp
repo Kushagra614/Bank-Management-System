@@ -132,13 +132,13 @@ int main()
          write_account();
          break;
          case '2':
-         depositAmount();
+         depositAmount(num);
          break;
          case '3':
-         withdrawAmount();
+         withdrawAmount(num);
          break;
          case '4':
-         displayBalance();
+         displayBalance(num);
          break;
          case '5':
          listAllaccounts();
@@ -159,31 +159,138 @@ int main()
 void write_account()
 {
    Account ac;
-   ofstream outfile("account.data");
+   ofstream outFile;
+   outFile.open("account.data", ios::binary|ios::app);
    ac.create_account();
-   outfile<< ac.getaccountNo()<<endl;
-   outfile<< ac.getfirstName()<<endl;
-   outfile<< ac.getlastName()<<endl;
+   outFile.write(reinterpret_cast<char *> (&ac), sizeof(Account));
+   outFile.close();
    
 
 }
 
-void depositAmount()
+void depositAmount(int n)
 {
-   int amt;
+  int n;
+  int amt;
+  bool found = false;
+  Account ac;
+  fstream File;
+  File.open("account.data", ios::binary|ios::in);
+  if(!File)
+  {
+   cout<<"File could not be Found!!! \n Press Any Key...";
+   return;
+  }
+  while(!File.eof() && found == false)
+  {
+    File.read(reinterpret_cast<char *> (&ac), sizeof(Account));
+    if(ac.getaccountNo()==n)
+    {
+      ac.display_account();
+      cout<<"\nTO DEPOSIT AMOUNT"<<endl;
+      cout<<"ENTER THE AMOUNT TO BE DEPSOTIED: ";
+      cin>>amt;
+      ac.deposit(amt);
+
+      streampos currentPosition = File.tellg(); // Get the current position of the file pointer
+      File.seekp(currentPosition - static_cast<streampos>(sizeof(ac))); // Move the file pointer back to the beginning of the record
+      File.write(reinterpret_cast<char *>(&ac), sizeof(Account)); // Write the modified account object to the file
+      cout << "Record Updated"<<endl;
+      found = true;
+
+
+    }
+  }
+  File.close();
+  if(found == false )
+  {
+   cout<<"Record not Found"<<endl; 
+  }
+
+}
+
+void withdrawAmount(int n)
+{   
+    int amt;
+    bool found = false;
+    Account ac;
+    fstream File;
+    File.open("account.dat", ios::binary | ios::in | ios::out);
+    if (!File)
+    {
+        cout << "File could not be open !! Press any Key...";
+        return;
+    }
+    while (!File.eof() && found == false)
+    {
+        File.read(reinterpret_cast<char *>(&ac), sizeof(Account));
+        if (ac.getaccountNo() == n)
+        {
+            ac.display_account();
+            cout << "\nTO WITHDRAW AMOUNT "<<endl;
+            cout << "Enter The amount to be withdrawn: "<<endl;
+            cin >> amt;
+            int bal = ac.getbalance() - amt;
+            if ((bal < 500 ))
+                cout << "Insufficient balance";
+            else
+            {
+               ac.withdraw(amt);
+
+               streampos currentPosition = File.tellg(); // Get the current position of the file pointer
+               File.seekp(currentPosition - static_cast<streampos>(sizeof(ac))); // Move the file pointer back to the beginning of the record
+               File.write(reinterpret_cast<char *>(&ac), sizeof(Account)); // Write the modified account object to the file
+               cout << " Record Updated";
+               found = true;
+
+            }
+        }
+    }
+    File.close();
+    if (found == false)
+        cout << " Record Not Found "<<endl;
+}
+
+void displayBalance(int n)
+{
    Account ac;
-   ifstream infile("account.data");
+   bool flag = false;
+   ifstream inFile;
+   inFile.open("account.data", ios::binary);
+   if(!inFile)
+   {
+      cout<<"File could not be found !! \nPress any Key...";
+		return;
+   }
+   cout<<"\n BALANCE DETAILS"<<endl;
 
+   while(inFile.read(reinterpret_cast<char*> (&ac), sizeof(Account)))
+   {
+      if(ac.getaccountNo()==n)
+      {
+         ac.display_account();
+         flag = true;
+      }
+   } 
+   inFile.close();
+   if(flag ==false)
+   {
+      cout<<"\n Account Number does not exist!!!"<<endl;
+   }
 }
 
-void withdrawAmount()
+void deleteAccount(int n)
 {
-
-}
-
-void displayBalance()
-{
-   
+   Account ac;
+   ifstream inFile;
+   ofstream outFile;
+   inFile.open("account.data", ios::binary);
+   if(!inFile)
+   {
+      cout<<"\n File cound not be found!!! \n Press any key..."<<endl;
+      return ;
+   }
+   outFile.open("Temp.data", ios::binary);
 }
 
 
