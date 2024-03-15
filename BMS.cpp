@@ -70,6 +70,7 @@ public:
     void deposit(long amount);
     void withdraw(long amount);
     friend void write_account();
+
     friend void depositAmount(long accountNumber);
     friend void withdrawAmount(long accountNumber);
     friend void listAllaccounts();
