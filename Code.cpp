@@ -1,579 +1,721 @@
-//BANK MANAGEMENT SYSTEM
+// // BANK MANAGEMENT SYSTEM
 
-#include<iostream>
-#include<fstream> //-> for file operations
-#include<cctype> //-> for char operations
-#include<iomanip> //-> input/ouput manipulators
-using namespace std;
+// #include <iostream>
+// #include <fstream>
+// #include <string>
+// #include <iomanip>
+// using namespace std;
 
-class Account{
-   protected:
-      long accountNo;
-      string firstName;
-      string lastName;
-      long double balance;
-
-   public:
-   Account(){}
-      Account(string firstName, string lastName, long accountNo, long double balance)
-      {
-         this->firstName = firstName;
-         this->lastName = lastName;
-         this->accountNo = accountNo;
-         this->balance = balance;
-
-      }
-
-      string getfirstName()
-      {
-         return firstName;
-      }
-      string getlastName()
-      {
-         return lastName;
-      }
-      void setfirstName(string firstName)
-      {
-          firstName = firstName;
-      }
-      void setlastName(string lastName)
-      {
-          lastName = lastName;
-      }
-      
-      int getaccountNo()
-      {
-         return accountNo;
-      }
-
-      void setaccountNo(long accountNo)
-      {
-         accountNo = accountNo;
-      }
-      
-      int getbalance()
-      {
-         return balance;
-      }
-
-      void setbalance(long double balance)
-      {
-         balance = balance;
-      }
-
-      void report() const;//-> //function to show data in tabular format
-      void create_account(); //-> func to create acc
-      void display_account() ;
-      void deposit(long amount);
-      void withdraw(long amount);
-      
-
-};
-
-void Account :: create_account()
-{
-   cout<<"Enter the Account Number: ";
-   cin>>accountNo;
-   cout<<"Enter your First Name: ";
-   cin.ignore();
-   getline(cin,firstName);
-   cout<<"Enter your Last Name: ";
-   cin.ignore();
-   getline(cin,lastName);
-   cout<<"YOUR ACCOUNT HAS BEEN CREATED..."<<endl;
-}
-
-void Account :: display_account() 
-{
-   cout<<"Enter the Account Number: ";
-   cin>>accountNo;
-   cout<<"First Name: "<< firstName <<endl;
-   cout<<"Last Name: "<< lastName <<endl;
-   cout<<"Balance Amount : "<<balance <<endl;
-   
-}
-
-void Account :: deposit(long amount)
-{
-   balance+=amount;
-}
-
-void Account :: withdraw(long amount)
-{
-   balance-=amount;
-}
-
-//FUNCTION DECLERATION
-
-void writeAccount();
-void depositAmmount();
-void listAllaccounts();
-void deleteAccount();
-void displayaccount();
-
-void write_account()
-{
-   Account ac;
-   ofstream outFile;
-   outFile.open("account.data", ios::binary|ios::app);
-   ac.create_account();
-   outFile.write(reinterpret_cast<char *> (&ac), sizeof(Account));
-   outFile.close();
-   
-
-}
-
-void depositAmount(int n)
-{
-  int n;
-  int amt;
-  bool found = false;
-  Account ac;
-  fstream File;
-  File.open("account.data", ios::binary|ios::in);
-  if(!File)
-  {
-   cout<<"File could not be Found!!! \n Press Any Key...";
-   return;
-  }
-  while(!File.eof() && found == false)
-  {
-    File.read(reinterpret_cast<char *> (&ac), sizeof(Account));
-    if(ac.getaccountNo()==n)
-    {
-      ac.display_account();
-      cout<<"\nTO DEPOSIT AMOUNT"<<endl;
-      cout<<"ENTER THE AMOUNT TO BE DEPSOTIED: ";
-      cin>>amt;
-      ac.deposit(amt);
-
-      streampos currentPosition = File.tellg(); // Get the current position of the file pointer
-      File.seekp(currentPosition - static_cast<streampos>(sizeof(ac))); // Move the file pointer back to the beginning of the record
-      File.write(reinterpret_cast<char *>(&ac), sizeof(Account)); // Write the modified account object to the file
-      cout << "Record Updated"<<endl;
-      found = true;
+// class Account
+// {
+// protected:
+//    long accountNo;
+//    string firstName;
+//    string lastName;
+//    long double balance;
 
 
-    }
-  }
-  File.close();
-  if(found == false )
-  {
-   cout<<"Record not Found"<<endl; 
-  }
+// public:
 
-}
+//    Account() {}
+//    Account(string firstName, string lastName, long accountNo, long double balance)
+//    {
+//       this->firstName = firstName;
+//       this->lastName = lastName;
+//       this->accountNo = accountNo;
+//       this->balance = balance;
+//    }
 
-void withdrawAmount(int n)
-{   
-    int amt;
-    bool found = false;
-    Account ac;
-    fstream File;
-    File.open("account.dat", ios::binary | ios::in | ios::out);
-    if (!File)
-    {
-        cout << "File could not be open !! Press any Key...";
-        return;
-    }
-    while (!File.eof() && found == false)
-    {
-        File.read(reinterpret_cast<char *>(&ac), sizeof(Account));
-        if (ac.getaccountNo() == n)
-        {
-            ac.display_account();
-            cout << "\nTO WITHDRAW AMOUNT "<<endl;
-            cout << "Enter The amount to be withdrawn: "<<endl;
-            cin >> amt;
-            int bal = ac.getbalance() - amt;
-            if ((bal < 500 ))
-                cout << "Insufficient balance";
-            else
-            {
-               ac.withdraw(amt);
+//    string getfirstName()
+//    {
+//       return firstName;
+//    }
+//    string getlastName()
+//    {
+//       return lastName;
+//    }
+//    void setfirstName(string firstName)
+//    {
+//       this->firstName = firstName;
+//    }
+//    void setlastName(string lastName)
+//    {
+//       this->lastName = lastName;
+//    }
 
-               streampos currentPosition = File.tellg(); // Get the current position of the file pointer
-               File.seekp(currentPosition - static_cast<streampos>(sizeof(ac))); // Move the file pointer back to the beginning of the record
-               //one more way of doing this
-               // File.seekg(0,ios::beg);
-               File.write(reinterpret_cast<char *>(&ac), sizeof(Account)); // Write the modified account object to the file
-               cout << " Record Updated";
-               found = true;
+//    long getaccountNo()
+//    {
+//       return accountNo;
+//    }
 
-            }
-        }
-    }
-    File.close();
-    if (found == false)
-        cout << " Record Not Found "<<endl;
-}
+//    void setaccountNo(long accountNo)
+//    {
+//       this->accountNo = accountNo;
+//    }
 
-void displayBalance(int n)
-{
-   Account ac;
-   bool flag = false;
-   ifstream inFile;
-   inFile.open("account.data", ios::binary);
-   if(!inFile)
-   {
-      cout<<"File could not be found !! \nPress any Key...";
-		return;
-   }
-   cout<<"\n BALANCE DETAILS"<<endl;
+//    long double getbalance()
+//    {
+//       return balance;
+//    }
 
-   while(inFile.read(reinterpret_cast<char*> (&ac), sizeof(Account)))
-   {
-      if(ac.getaccountNo()==n)
-      {  
+//    void setbalance(long double balance)
+//    {
+//       this->balance = balance;
+//    }
 
-         ac.display_account();
-         flag = true;
-      }
-   } 
-   inFile.close();
-   if(flag ==false)
-   {
-      cout<<"\n Account Number does not exist!!!"<<endl;
-   }
-}
+//    void report() const;
+//    void create_account();
+//    void display_account() const ;
+//    void deposit(long amount);
+//    void withdraw(long amount);
+// };
 
-void deleteAccount(int n)
-{
-   Account ac;
-   ifstream inFile;
-   ofstream outFile;
-   inFile.open("account.data", ios::binary);
-   if(!inFile)
-   {
-      cout<<"\n File cound not be found!!! \n Press any key..."<<endl;
-      return ;
-   }
-   outFile.open("Temp.data", ios::binary);
-   inFile.seekg(0, ios::beg);
-   while(inFile.read(reinterpret_cast<char*> (&ac), sizeof(Account)))
-   {
+// void Account::create_account()
+// {
+//    cout << "Enter the Account Number: ";
+//    cin >> accountNo;
+//    cout << "Enter your First Name: ";
+//    cin >> firstName;
+//    cout << "Enter your Last Name: ";
+//    cin >> lastName;
+//    cout<<"Your initial Balance: ";
+//    cin>>balance;
+//    cout << "YOUR ACCOUNT HAS BEEN CREATED..." << endl;
 
-   }
-   inFile.close();
-   outFile.close();
-   remove("Account.data");
-   rename("Temp.data","account.data");
-   cout<<"\n ACCOUNT DELETED"<<endl;
-}
+// }
 
-void ListAllacounts()
-{
-   Account ac;
-   ifstream inFile;
-   inFile.open("account.data",ios::binary);
-   if(!inFile)
-   {
-      cout<<"The file could not be found!!! \n Press any key"<<endl;
-      return ;
-   }
-   cout<<"\n\n\t\tACCOUNT HOLDER LIST\n\n";
-	cout<<"====================================================\n";
-	cout<<"A/c no.      NAME           Type  Balance\n";
-	cout<<"====================================================\n";
+// void Account::display_account() const
+// {
+//    cout << "Account Number: " << accountNo << endl;
+//    cout << "First Name: " << firstName << endl;
+//    cout << "Last Name: " << lastName << endl;
+//    cout << "Balance Amount : " << balance << endl;
+// }
 
-   while(inFile.read(reinterpret_cast<char *> (&ac), sizeof(Account)))
-   {
-      ac.report();
-   }
-   inFile.close();
+// void Account::deposit(long amount)
+// {
+//    balance += amount;
+// }
 
-}
-void displayAccount(int n)
-{
-   Account ac;
-   bool flag = false;
-   ifstream inFile;
-   inFile.open("account.data", ios::binary);
-   if(!inFile)
-	{
-		cout<<"File could not be open !!\n Press any Key...";
-		return;
-	}
-	cout<<"\nBALANCE DETAILS\n";
+// void Account::withdraw(long amount)
+// {
+//    balance -= amount;
+// }
 
-    	while(inFile.read(reinterpret_cast<char *> (&ac), sizeof(Account)))
-	{
-		if(ac.getaccountNo()==n)
-		{
-			ac.display_account();
-			flag=true;
-		}
-	}
-	inFile.close();
-	if(flag==false)
-		cout<<"\nAccount number does not exist"<<endl;
-}
+// void Account::report() const
+// {
+//    cout << accountNo << setw(10) << " " << firstName<<" "<< lastName << setw(10) << " " << setw(6) << balance << endl;
+// }
 
+// void write_account();
+// void depositAmount(long accountNumber);
+// void listAllaccounts();
+// void deleteAccount();
+// void displayAccount(long accountNumber);
 
-int main()
-{
-   char ch;
-   int num;
-   do
-   {
-      cout<<"MAIN MENU"<<endl;
-      cout<<"1.CREATE ACCOUNT"<<endl;
-      cout<<"2. DEPOSIT AMOUNT"<<endl;
-      cout<<"3. WITHDRAW AMOUNT"<<endl;
-      cout<<"4. DISPLAY BALANCE"<<endl;
-      cout<<"5. DISPLAY ALL ACCOUNTS"<<endl;
-      cout<<"6. DELETE AN ACCOUNT"<<endl;
-      cout<<"7. EXIT"<<endl;
-      
-      cin>>ch;
-      switch(ch)
-      {
-         case '1':
-         writeAccount();
-         break;
-         case '2':
-         depositAmount(num);
-         break;
-         case '3':
-         withdrawAmount(num);
-         break;
-         case '4':
-         displayBalance(num);
-         break;
-         case '5':
-         listAllaccounts();
-         break;
-         case '6':
-         deleteAccount();
-         break;
-         case '7':
-         cout<<"THANK YOU FOR USING THE BANK MANAGEMENT SYSTEM"<<endl;
-         break;
-      }
-         
-   }
-   while(ch!='8');
-   return 0;
-   
-}
 // void write_account()
 // {
 //    Account ac;
 //    ofstream outFile;
-//    outFile.open("account.data", ios::binary|ios::app);
+//    outFile.open("account.data", ios::binary | ios::app);
 //    ac.create_account();
-//    outFile.write(reinterpret_cast<char *> (&ac), sizeof(Account));
+//    outFile.write(reinterpret_cast<char *>(&ac), sizeof(Account));
 //    outFile.close();
-   
-
 // }
 
-// void depositAmount(int n)
+// void depositAmount(long accountNumber)
 // {
-//   int n;
-//   int amt;
-//   bool found = false;
-//   Account ac;
-//   fstream File;
-//   File.open("account.data", ios::binary|ios::in);
-//   if(!File)
-//   {
-//    cout<<"File could not be Found!!! \n Press Any Key...";
-//    return;
-//   }
-//   while(!File.eof() && found == false)
-//   {
-//     File.read(reinterpret_cast<char *> (&ac), sizeof(Account));
-//     if(ac.getaccountNo()==n)
-//     {
-//       ac.display_account();
-//       cout<<"\nTO DEPOSIT AMOUNT"<<endl;
-//       cout<<"ENTER THE AMOUNT TO BE DEPSOTIED: ";
-//       cin>>amt;
-//       ac.deposit(amt);
-
-//       streampos currentPosition = File.tellg(); // Get the current position of the file pointer
-//       File.seekp(currentPosition - static_cast<streampos>(sizeof(ac))); // Move the file pointer back to the beginning of the record
-//       File.write(reinterpret_cast<char *>(&ac), sizeof(Account)); // Write the modified account object to the file
-//       cout << "Record Updated"<<endl;
-//       found = true;
-
-
-//     }
-//   }
-//   File.close();
-//   if(found == false )
-//   {
-//    cout<<"Record not Found"<<endl; 
-//   }
-
-// }
-
-// void withdrawAmount(int n)
-// {   
 //     int amt;
 //     bool found = false;
 //     Account ac;
 //     fstream File;
-//     File.open("account.dat", ios::binary | ios::in | ios::out);
+//     File.open("account.data", ios::binary | ios::in | ios::out);
 //     if (!File)
 //     {
 //         cout << "File could not be open !! Press any Key...";
 //         return;
 //     }
-//     while (!File.eof() && found == false)
+//     while (File.read(reinterpret_cast<char *>(&ac), sizeof(Account)))
 //     {
-//         File.read(reinterpret_cast<char *>(&ac), sizeof(Account));
-//         if (ac.getaccountNo() == n)
+//         if (ac.getaccountNo() == accountNumber)
 //         {
 //             ac.display_account();
-//             cout << "\nTO WITHDRAW AMOUNT "<<endl;
-//             cout << "Enter The amount to be withdrawn: "<<endl;
+//             cout << "\nTO DEPOSIT AMOUNT " << endl;
+//             cout << "Enter the amount to be deposited: ";
 //             cin >> amt;
-//             int bal = ac.getbalance() - amt;
-//             if ((bal < 500 ))
-//                 cout << "Insufficient balance";
-//             else
-//             {
-//                ac.withdraw(amt);
 
-//                streampos currentPosition = File.tellg(); // Get the current position of the file pointer
-//                File.seekp(currentPosition - static_cast<streampos>(sizeof(ac))); // Move the file pointer back to the beginning of the record
-//                //one more way of doing this
-//                // File.seekg(0,ios::beg);
-//                File.write(reinterpret_cast<char *>(&ac), sizeof(Account)); // Write the modified account object to the file
-//                cout << " Record Updated";
-//                found = true;
+//             ac.deposit(amt);
 
-//             }
+//             // Update the account object in the file
+//             int currentPosition = File.tellg(); // Get the current position of the file pointer
+//             File.seekp(currentPosition - static_cast<int>(sizeof(Account))); // Move the file pointer back to the beginning of the record
+//             File.write(reinterpret_cast<char *>(&ac), sizeof(Account)); // Write the modified account object to the file
+//             cout << "Record Updated" << endl;
+//             found = true;
+//             break; // Exit the loop once the account is found and updated
 //         }
 //     }
 //     File.close();
-//     if (found == false)
-//         cout << " Record Not Found "<<endl;
+//     if (!found)
+
+//     {
+//         cout << "Record not Found" << endl;
+//     }
 // }
 
-// void displayBalance(int n)
+// void withdrawAmount(long accountNumber)
 // {
-//    Account ac;
-//    bool flag = false;
-//    ifstream inFile;
-//    inFile.open("account.data", ios::binary);
-//    if(!inFile)
-//    {
-//       cout<<"File could not be found !! \nPress any Key...";
-// 		return;
-//    }
-//    cout<<"\n BALANCE DETAILS"<<endl;
+//     int amt;
+//     bool found = false;
+//     Account ac;
+//     fstream File;
+//     File.open("account.data", ios::binary | ios::in | ios::out);
+//     if (!File)
+//     {
+//         cout << "File could not be open !! Press any Key...";
+//         return;
+//     }
+//     while (File.read(reinterpret_cast<char *>(&ac), sizeof(Account)))
+//     {
+//         if (ac.getaccountNo() == accountNumber)
+//         {
+//             ac.display_account();
+//             cout << "\nTO WITHDRAW AMOUNT " << endl;
+//             cout << "Enter the amount to be withdrawn: ";
+//             cin >> amt;
+//             if (amt > ac.getbalance())
+//             {
+//                 cout << "Insufficient balance" << endl;
+//                 break;
+//             }
+//             ac.withdraw(amt);
 
-//    while(inFile.read(reinterpret_cast<char*> (&ac), sizeof(Account)))
-//    {
-//       if(ac.getaccountNo()==n)
-//       {  
-
-//          ac.display_account();
-//          flag = true;
-//       }
-//    } 
-//    inFile.close();
-//    if(flag ==false)
-//    {
-//       cout<<"\n Account Number does not exist!!!"<<endl;
-//    }
+//             // Update the account object in the file
+//             int currentPosition = File.tellg(); // Get the current position of the file pointer
+//             File.seekp(currentPosition - static_cast<int>(sizeof(Account))); // Move the file pointer back to the beginning of the record
+//             File.write(reinterpret_cast<char *>(&ac), sizeof(Account)); // Write the modified account object to the file
+//             cout << "Record Updated" << endl;
+//             found = true;
+//             break; // Exit the loop once the account is found and updated
+//         }
+//     }
+//     File.close();
+//     if (!found)
+//     {
+//         cout << "Record not Found" << endl;
+//     }
 // }
 
-// void deleteAccount(int n)
+
+// void displayBalance(long accountNumber)
+// {
+//     bool found = false;
+//     Account ac;
+//     ifstream inFile;
+//     inFile.open("account.data", ios::binary);
+//     if (!inFile)
+//     {
+//         cout << "File could not be found!! \nPress any Key...";
+//         return;
+//     }
+//     cout << "\nBALANCE DETAILS" << endl;
+//     while (inFile.read(reinterpret_cast<char *>(&ac), sizeof(Account)))
+//     {
+//         if (ac.getaccountNo() == accountNumber)
+//         {
+//             cout << "Account Number: " << ac.getaccountNo() << endl;
+//             cout << "First Name: " << ac.getfirstName() << endl;
+//             cout << "Last Name: " << ac.getlastName() << endl;
+//             cout << "Balance: " << ac.getbalance() << endl;
+//             found = true;
+//             break; // Exit the loop once the account is found and displayed
+//         }
+//     }
+//     inFile.close();
+//     if (!found)
+//     {
+//         cout << "\nAccount number does not exist" << endl;
+//     }
+// }
+
+
+
+
+
+// void deleteAccount()
 // {
 //    Account ac;
+//    long accountNumber;
+//    cout << "Enter Account Number to delete: ";
+//    cin >> accountNumber;
+
 //    ifstream inFile;
 //    ofstream outFile;
 //    inFile.open("account.data", ios::binary);
-//    if(!inFile)
+//    if (!inFile)
 //    {
-//       cout<<"\n File cound not be found!!! \n Press any key..."<<endl;
-//       return ;
+//       cout << "\n File could not be found!!! \n Press any key..." << endl;
+//       return;
 //    }
 //    outFile.open("Temp.data", ios::binary);
-//    inFile.seekg(0, ios::beg);
-//    while(inFile.read(reinterpret_cast<char*> (&ac), sizeof(Account)))
+//    while (inFile.read(reinterpret_cast<char *>(&ac), sizeof(Account)))
 //    {
-
+//       if (ac.getaccountNo() != accountNumber)
+//       {
+//          outFile.write(reinterpret_cast<char *>(&ac), sizeof(Account));
+//       }
 //    }
 //    inFile.close();
 //    outFile.close();
-//    remove("Account.data");
-//    rename("Temp.data","account.data");
-//    cout<<"\n ACCOUNT DELETED"<<endl;
+//    remove("account.data");
+//    rename("Temp.data", "account.data");
+//    cout << "\n ACCOUNT DELETED" << endl;
 // }
 
-// void ListAllacounts()
+// void listAllaccounts()
 // {
 //    Account ac;
 //    ifstream inFile;
-//    inFile.open("account.data",ios::binary);
-//    if(!inFile)
+//    inFile.open("account.data", ios::binary);
+//    if (!inFile)
 //    {
-//       cout<<"The file could not be found!!! \n Press any key"<<endl;
-//       return ;
+//       cout << "The file could not be found!!! \n Press any key" << endl;
+//       return;
 //    }
-//    cout<<"\n\n\t\tACCOUNT HOLDER LIST\n\n";
-// 	cout<<"====================================================\n";
-// 	cout<<"A/c no.      NAME           Type  Balance\n";
-// 	cout<<"====================================================\n";
-
-//    while(inFile.read(reinterpret_cast<char *> (&ac), sizeof(Account)))
+//    cout << "\n\n\t\tACCOUNT HOLDER LIST\n\n";
+//    cout << "====================================================\n";
+//    cout << "A/c no.      NAME             Balance\n";
+//    cout << "====================================================\n";
+//    while (inFile.read(reinterpret_cast<char *>(&ac), sizeof(Account)))
 //    {
 //       ac.report();
 //    }
 //    inFile.close();
-
 // }
-// void displayAccount(int n)
+
+// void displayAccount(long accountNumber)
 // {
 //    Account ac;
-//    bool flag = false;
+//    bool found = false;
 //    ifstream inFile;
 //    inFile.open("account.data", ios::binary);
-//    if(!inFile)
-// 	{
-// 		cout<<"File could not be open !!\n Press any Key...";
-// 		return;
-// 	}
-// 	cout<<"\nBALANCE DETAILS\n";
+//    if (!inFile)
+//    {
+//       cout << "File could not be open !!\n Press any Key...";
+//       return;
+//    }
+//    cout << "\nBALANCE DETAILS\n";
+//    while (inFile.read(reinterpret_cast<char *>(&ac), sizeof(Account)))
+//    {
+//       if (ac.getaccountNo() == accountNumber)
+//       {
+//          ac.display_account();
+//          found = true;
+//          break;
+//       }
+//    }
+//    inFile.close();
+//    if (!found)
+//       cout << "\nAccount number does not exist" << endl;
+// }
 
-//     	while(inFile.read(reinterpret_cast<char *> (&ac), sizeof(Account)))
-// 	{
-// 		if(ac.getaccountNo()==n)
-// 		{
-// 			ac.display_account();
-// 			flag=true;
-// 		}
-// 	}
-// 	inFile.close();
-// 	if(flag==false)
-// 		cout<<"\nAccount number does not exist"<<endl;
+// int main()
+// {
+//    char ch;
+//    long accountNumber;
+//    do
+//    {
+//       cout << "MAIN MENU" << endl;
+//       cout << "1. CREATE ACCOUNT" << endl;
+//       cout << "2. DEPOSIT AMOUNT" << endl;
+//       cout << "3. WITHDRAW AMOUNT" << endl;
+//       cout << "4. DISPLAY BALANCE" << endl;
+//       cout << "5. DISPLAY ALL ACCOUNTS" << endl;
+//       cout << "6. DELETE AN ACCOUNT" << endl;
+//       cout << "7. EXIT" << endl;
+
+//       cout << "Enter your choice: ";
+//       cin >> ch;
+
+//       switch (ch)
+//       {
+//       case '1':
+//          write_account();
+//          break;
+//       case '2':
+//          cout << "Enter Account Number: ";
+//          cin >> accountNumber;
+//          depositAmount(accountNumber);
+//          break;
+//       case '3':
+//          cout << "Enter Account Number: ";
+//          cin >> accountNumber;
+//          withdrawAmount(accountNumber);
+//          break;
+//       case '4':
+//          cout << "Enter Account Number: ";
+//          cin >> accountNumber;
+//          displayBalance(accountNumber);
+//          break;
+//       case '5':
+//          listAllaccounts();
+//          break;
+//       case '6':
+//          deleteAccount();
+//          break;
+//       case '7':
+//          cout << "THANK YOU FOR USING THE BANK MANAGEMENT SYSTEM" << endl;
+//          break;
+//       default:
+//          cout << "Invalid choice! Please enter a valid option." << endl;
+//          break;
+//       }
+//    } while (ch != '7');
+//    return 0;
 // }
 
 
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <iomanip>
+using namespace std;
 
+class Account
+{
+private:
+    long accountNo;
+    string firstName;
+    string lastName;
+    long double balance;
 
+public:
+    Account() {}
+    Account(string firstName, string lastName, long accountNo, long double balance)
+    {
+        this->firstName = firstName;
+        this->lastName = lastName;
+        this->accountNo = accountNo;
+        this->balance = balance;
+    }
 
+    string getfirstName() const
+    {
+        return firstName;
+    }
+    string getlastName() const
+    {
+        return lastName;
+    }
+    void setfirstName(string firstName)
+    {
+        this->firstName = firstName;
+    }
+    void setlastName(string lastName)
+    {
+        this->lastName = lastName;
+    }
 
+    long getaccountNo() const
+    {
+        return accountNo;
+    }
 
+    void setaccountNo(long accountNo)
+    {
+        this->accountNo = accountNo;
+    }
 
+    long double getbalance() const
+    {
+        return balance;
+    }
 
+    void setbalance(long double balance)
+    {
+        this->balance = balance;
+    }
 
+    void report() const
+    {
+        cout << accountNo << setw(10) << " " << firstName << " " << lastName << setw(10) << " " << setw(6) << balance << endl;
+    }
+    void create_account();
+    void display_account() const;
+    void deposit(long amount);
+    void withdraw(long amount);
+    friend void write_account();
+    friend void depositAmount(long accountNumber);
+    friend void withdrawAmount(long accountNumber);
+    friend void listAllaccounts();
+    friend void deleteAccount();
+    friend void displayBalance(long accountNumber);
+};
 
+void Account::create_account()
+{
+    cout << "Enter the Account Number: ";
+    cin >> accountNo;
+    cout << "Enter your First Name: ";
+    cin >> firstName;
+    cout << "Enter your Last Name: ";
+    cin >> lastName;
+    cout << "Enter your initial Balance: ";
+    cin >> balance;
+    cout << "YOUR ACCOUNT HAS BEEN CREATED..." << endl;
+}
 
+void Account::display_account() const
+{
+    cout << "Account Number: " << accountNo << endl;
+    cout << "First Name: " << firstName << endl;
+    cout << "Last Name: " << lastName << endl;
+    cout << "Balance Amount : " << balance << endl;
+}
 
+void Account::deposit(long amount)
+{
+    balance += amount;
+}
 
+void Account::withdraw(long amount)
+{
+    balance -= amount;
+}
 
+void write_account()
+{
+    Account ac;
+    ofstream outFile;
+    outFile.open("account.txt", ios::app);
+    if (!outFile)
+    {
+        cout << "Error opening file for writing!" << endl;
+        return;
+    }
+    ac.create_account();
+    outFile << ac.getaccountNo() << " " << ac.getfirstName() << " " << ac.getlastName() << " " << ac.getbalance() << endl;
+    outFile.close();
+}
 
+void depositAmount(long accountNumber)
+{
+    int amt;
+    bool found = false;
+    Account ac;
+    fstream File;
+    File.open("account.txt", ios::in | ios::out);
+    if (!File)
+    {
+        cout << "Error opening file for deposit!" << endl;
+        return;
+    }
+    while (File >> ac.accountNo >> ac.firstName >> ac.lastName >> ac.balance)
+    {
+        if (ac.getaccountNo() == accountNumber)
+        {
+            ac.display_account();
+            cout << "\nTO DEPOSIT AMOUNT " << endl;
+            cout << "Enter the amount to be deposited: ";
+            cin >> amt;
 
+            ac.deposit(amt);
 
+            int currentPosition = File.tellg(); 
+            File.seekp(currentPosition - static_cast<int>(sizeof(Account))); 
+            File << ac.getaccountNo() << " " << ac.getfirstName() << " " << ac.getlastName() << " " << ac.getbalance() << endl; 
+            cout << "Record Updated" << endl;
+            found = true;
+            break; 
+        }
+    }
+    File.close();
+    if (!found)
+    {
+        cout << "Record not Found" << endl;
+    }
+}
 
+void withdrawAmount(long accountNumber)
+{
+    int amt;
+    bool found = false;
+    Account ac;
+    fstream File;
+    File.open("account.txt", ios::in | ios::out);
+    if (!File)
+    {
+        cout << "Error opening file for withdrawal!" << endl;
+        return;
+    }
+    while (File >> ac.accountNo >> ac.firstName >> ac.lastName >> ac.balance )
+    {
+        if (ac.getaccountNo() == accountNumber)
+        {
+            ac.display_account();
+            cout << "\nTO WITHDRAW AMOUNT " << endl;
+            cout << "Enter the amount to be withdrawn: ";
+            cin >> amt;
+            if (amt > ac.getbalance())
+            {
+                cout << "Insufficient balance" << endl;
+                break;
+            }
+            ac.withdraw(amt);
 
+            int currentPosition = File.tellg(); 
+            File.seekp(currentPosition - static_cast<int>(sizeof(Account))); 
+            File << ac.getaccountNo() << " " << ac.getfirstName() << " " << ac.getlastName() << " " << ac.getbalance() << endl; 
+            cout << "Record Updated" << endl;
+            found = true;
+            break; 
+        }
+    }
+    File.close();
+    if (!found)
+    {
+        cout << "Record not Found" << endl;
+    }
+}
 
+void displayBalance(long accountNumber)
+{
+    bool found = false;
+    Account ac;
+    ifstream inFile;
+    inFile.open("account.txt");
+    if (!inFile)
+    {
+        cout << "Error opening file for balance check!" << endl;
+        return;
+    }
+    while (inFile >> ac.accountNo>> ac.firstName >> ac.lastName >> ac.balance)
+    {
+        if (ac.getaccountNo() == accountNumber)
+        {
+            cout << "\nBALANCE DETAILS" << endl;
+            ac.display_account();
+            found = true;
+            break;
+        }
+    }
+    inFile.close();
+    if (!found)
+    {
+        cout << "\nAccount number does not exist" << endl;
+    }
+}
 
+void deleteAccount()
+{
+    long accountNumber;
+    cout << "Enter Account Number to delete: ";
+    cin >> accountNumber;
 
+    ifstream inFile;
+    ofstream outFile;
+    inFile.open("account.txt");
+    outFile.open("temp.txt");
+    Account ac;
+    bool found = false;
+    while (inFile >> ac.accountNo >> ac.firstName >> ac.lastName >> ac.balance)
+    {
+        if (ac.getaccountNo() != accountNumber)
+        {
+            outFile << ac.accountNo << " " << ac.firstName << " " << ac.lastName << " " << ac.balance << endl;
+        }
+        else
+        {
+            found = true;
+        }
+    }
+    inFile.close();
+    outFile.close();
 
+    if (found)
+    {
+        remove("account.txt");
+        rename("temp.txt", "account.txt");
+        cout << "\n ACCOUNT DELETED" << endl;
+    }
+    else
+    {
+        cout << "\n Account number not found. Deletion failed." << endl;
+    }
+}
+
+void listAllaccounts()
+{
+    Account ac;
+    ifstream inFile;
+    inFile.open("account.txt");
+    if (!inFile)
+    {
+        cout << "Error opening file for listing accounts!" << endl;
+        return;
+    }
+    cout << "\n\n\t\tACCOUNT HOLDER LIST\n\n";
+    cout << "====================================================\n";
+    cout << "A/c no.      NAME             Balance\n";
+    cout << "====================================================\n";
+    while (inFile >> ac.accountNo >> ac.firstName >> ac.lastName >> ac.balance)
+    {
+        ac.report();
+    }
+    inFile.close();
+}
+
+int main()
+{
+    char ch;
+    long accountNumber;
+    do
+    {
+        cout << "MAIN MENU" << endl;
+        cout << "1. CREATE ACCOUNT" << endl;
+        cout << "2. DEPOSIT AMOUNT" << endl;
+        cout << "3. WITHDRAW AMOUNT" << endl;
+        cout << "4. DISPLAY BALANCE" << endl;
+        cout << "5. DISPLAY ALL ACCOUNTS" << endl;
+        cout << "6. DELETE AN ACCOUNT" << endl;
+        cout << "7. EXIT" << endl;
+
+        cout << "Enter your choice: ";
+        cin >> ch;
+
+        switch (ch)
+        {
+        case '1':
+            write_account();
+            break;
+        case '2':
+            cout << "Enter Account Number: ";
+            cin >> accountNumber;
+            depositAmount(accountNumber);
+            break;
+        case '3':
+            cout << "Enter Account Number: ";
+            cin >> accountNumber;
+            withdrawAmount(accountNumber);
+            break;
+        case '4':
+            cout << "Enter Account Number: ";
+            cin >> accountNumber;
+            displayBalance(accountNumber);
+            break;
+        case '5':
+            listAllaccounts();
+            break;
+        case '6':
+            deleteAccount();
+            break;
+        case '7':
+            cout << "THANK YOU FOR USING THE BANK MANAGEMENT SYSTEM" << endl;
+            break;
+        default:
+            cout << "Invalid choice! Please enter a valid option." << endl;
+            break;
+        }
+    } while (ch != '7');
+    return 0;
+}
