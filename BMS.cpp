@@ -1,4 +1,4 @@
-// // BANK MANAGEMENT SYSTEM
+ // BANK MANAGEMENT SYSTEM
 
 #include <iostream>
 #include <fstream>
