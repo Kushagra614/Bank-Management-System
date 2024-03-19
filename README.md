@@ -19,7 +19,7 @@ This project provides a user-friendly bank management system implemented in C++.
 * Each line within the text file represents an individual account, containing the account number, first name, last name, and current balance, separated by spaces for clear organization.
 * The program utilizes well-defined functions to handle specific tasks. These functions include `create_account`, `depositAmount`, `withdrawAmount`, `displayBalance`, `listAllaccounts`, and `deleteAccount`, promoting modularity and code reusability.
 
-* **Getting Started:**
+**Getting Started:**
 
 1. Compile the C++ code using a suitable C++ compiler.
 2. Execute the generated program file.
@@ -37,6 +37,4 @@ This project provides a user-friendly bank management system implemented in C++.
 **Embrace Efficient Banking Management:**
 
 This C++ bank management system empowers you to manage your finances effectively. With its intuitive interface and core functionalities, it streamlines account creation, deposits, withdrawals, balance inquiries, and account management – all within a user-friendly environment.
-
-
 
