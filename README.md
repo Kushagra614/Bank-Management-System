@@ -1,6 +1,6 @@
 # BANK MANAGEMENT SYSTEM
 
-## Bank Management System in C++: A Comprehensive Readme
+## Bank Management System in C++: 
 
 This project provides a user-friendly bank management system implemented in C++. It empowers users to manage their accounts efficiently and conveniently, offering a range of essential functionalities.
 
